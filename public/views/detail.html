@@ -1,0 +1,37 @@
+{{ template "header" .ArticleTitle }}
+
+<main class="main article">
+
+
+{{ if .ArticleTitle }}
+<div class="header"></div>
+<h1>
+    {{ .ArticleTitle }}
+</h1>
+<div class="lead"></div>
+{{ end }}
+
+{{ if .ArticleLead }}
+<div class="lead">
+    <p><strong>
+    {{ .ArticleLead }}
+    </strong></p>
+</div>
+{{ end }}
+
+{{ if .ArticleContent }}
+    {{ range .ArticleContent }}
+        <p>
+            {{ . }}
+        </p>
+    {{ end }}
+{{ end }}
+<p>
+    {{ .CreatedAt }}
+</p>
+</main>
+
+</body>
+
+</html>
+

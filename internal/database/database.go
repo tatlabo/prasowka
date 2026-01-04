@@ -5,12 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // Service represents a service that interacts with a database.
@@ -22,16 +21,21 @@ type Service interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
+
+	Conn() *sql.DB
 }
 
 type service struct {
 	db *sql.DB
 }
 
-var (
-	dburl      = os.Getenv("BLUEPRINT_DB_URL")
-	dbInstance *service
-)
+const dburl = "db/websites.db"
+
+var dbInstance *service
+
+func (s *service) Conn() *sql.DB {
+	return s.db
+}
 
 func New() Service {
 	// Reuse Connection
@@ -39,7 +43,7 @@ func New() Service {
 		return dbInstance
 	}
 
-	db, err := sql.Open("sqlite3", dburl)
+	db, err := sql.Open("sqlite", dburl)
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.

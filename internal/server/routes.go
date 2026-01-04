@@ -3,12 +3,17 @@ package server
 import (
 	"net/http"
 
+	"prasowka/internal/handlers"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
+
+	r.LoadHTMLGlob("public/views/*.html")
+	r.Static("static", "./static")
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"}, // Add your frontend URL
@@ -20,6 +25,16 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", s.HelloWorldHandler)
 
 	r.GET("/health", s.healthHandler)
+
+	r.GET("/news", handlers.HandleAllDaily)
+
+	r.GET("/news/:id", handlers.HandleProcessById)
+
+	r.GET("/error", handlers.HandleError)
+
+	r.GET("/json/news", handlers.HandleAllDailyJSON)
+
+	r.GET("/news/raw/:id", handlers.HandleProcessById)
 
 	return r
 }
