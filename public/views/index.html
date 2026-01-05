@@ -1,7 +1,8 @@
-{{ template "header" .Title}}
-<p>{{ .Title }}</p>
+{{ block "index" . }}
+{{ template "header" .Title }}
 
 {{ template "table-headers" . }}
+
 {{ if .List }}
 <ol id="list" class="file-list" type="1">
     {{ range .List }}
@@ -10,27 +11,47 @@
 </ol>
 {{ end }}
 
+<dialog id="modal">
+  <h1>Welcome!</h1>
+  <p>Click Close or press esc to close modal</p>
+  <form method="dialog">
+    <button>Close</button>
+  </form>
+</dialog>
+
+<article class="preview-wrapper" id="preview-section" style="display: none;">
+    <section class="preview">
+    <button type="button" class="primary close-btn" id="hidePreview" onClick="deletePreview()">x</button>
+    <div id="preview"></div>
+    </section>
+</article>
+
+{{ template "footer" . }}
+{{ end }}
+
 </body>
 
 </html>
 
-
 {{ define "list-item" }}
 <li class="item-list" data-name="{{ .Title }}" data-moddate="{{ .CreatedAt }}">
 
-    <a href="{{ .URL }}">{{ .Title }}</a>
-
+    <a href="/news/{{ .Id }}" hx-boost="true" hx-target="#preview" hx-swap="innerHTML" hx-get="/news/{{ .Id }}" hx-trigger="click" onClick="showPreview()" class="preview-link">
+        {{ .Title }}
+    </a>
+    
+    <span>
+        {{ if .Done }}v{{ else }}—{{ end }}
+    </span>
+    
     <time datetime="{{ .CreatedAt }}">
-        {{ .CreatedAt }}
+        {{ .CreatedAt | formatDate }}
     </time>
-
-    <a href="/news/{{ .Id }}">
+    
+    <a href="{{ .URL }}">
         {{ .Id }}
     </a>
 
-    <span>
-        {{ if .Done }}✔{{ else }}✘{{ end }}
-    </span>
 </li>
 {{ end }}
 
@@ -54,4 +75,7 @@
         </span>
     </li>
 </ul>
+{{ end }}
+
+{{ block "footer" . }}
 {{ end }}

@@ -1,18 +1,15 @@
 {{ template "header" .Title }}
 
+{{ define "error" }}
 <main class="main">
-
     <article class="error-handler">
         <h2>Error Page</h2>
         {{ if .Error }}
         <p>{{ .Error }}</p>
         {{ end }}
     </article>
+    
+</main>
+{{ end }}
 
-
-
-    </main>
-
-</body>
-
-</html>
+{{ template "footer" . }}

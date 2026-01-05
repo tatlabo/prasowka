@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type Person struct {
@@ -19,4 +20,13 @@ func main() {
 		return
 	}
 	fmt.Printf("%v\n", string(out))
+
+	d := "2026-01-05T09:45:36"
+
+	t, err := time.Parse("2006-01-02T15:04:05", d)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return
+	}
+	fmt.Println("Parsed time:", t)
 }

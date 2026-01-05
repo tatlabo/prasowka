@@ -3,45 +3,11 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
-
-type Website struct {
-	Id        int          `db:"id"`
-	SourceId  int          `db:"source_id"`
-	URL       template.URL `db:"url" json:"url"`
-	Title     string       `db:"title" json:"title"`
-	Body      string       `db:"body" json:"body"`
-	Blob      []byte       `db:"raw"`
-	CreatedAt time.Time    `db:"created_at" json:"created_at"`
-	Keywords  string       `db:"keywords" json:"keywords"`
-	Display   int          `db:"display" json:"display"`
-	Done      int          `db:"done" json:"done"`
-	MD5       string       `db:"md5"`
-	Table     string       `db:"table"`
-}
-
-type SqlInit struct {
-	Create string
-	Config []string
-	Delete string
-}
-
-type WebsiteRender struct {
-	Id        int    `db:"id" json:"id"`
-	URL       string `db:"url" json:"url"`
-	Title     string `db:"title" json:"title"`
-	Body      string `db:"body" json:"body"`
-	CreatedAt string `db:"created_at" json:"created_at"`
-	Keywords  string `db:"keywords" json:"keywords"`
-	Display   int    `db:"display" json:"display"`
-	Done      int    `db:"done" json:"done"`
-}
 
 func HandleAllDaily(c *gin.Context) {
 	// dbService := database.New()
@@ -140,35 +106,14 @@ func HandleProcessById(c *gin.Context) {
 			return
 		}
 	}
-	s, err := ScrapArticle(w)
+	a, err := ScrapArticle(w)
 
 	if err != nil {
 		ErrorPage(c, err)
 		return
 	}
 
-	var articleTitle, articleLead string
-	var articleContent []string
-
-	if len(s) > 0 {
-		articleTitle = s[0]
-	}
-	if len(s) > 1 {
-		articleLead = s[1]
-	}
-	if len(s) > 2 {
-		articleContent = s[2:]
-	}
-
-	c.HTML(http.StatusOK, "detail.html", gin.H{
-		"Title":          "Main website", // for haeder title
-		"Article":        w,
-		"ArticleTitle":   articleTitle,
-		"ArticleLead":    articleLead,
-		"ArticleContent": articleContent,
-		"CreatedAt":      w.CreatedAt.Format("2006-01-02 15:04:05"),
-	})
-
+	c.HTML(http.StatusOK, "article", gin.H{"Article": a})
 }
 
 func ErrorPage(c *gin.Context, err error) {

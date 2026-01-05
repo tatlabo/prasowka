@@ -1,0 +1,30 @@
+{{ define "article"  }}
+    {{ if .Article }}
+    <main class="main article">
+        <div class="header"></div>
+        <h1>
+            {{ .Article.Title }}
+        </h1>
+        <div class="lead"></div>
+    {{ end }}
+    {{ if .Article.Lead }}
+        <div class="lead">
+            <p>
+                <strong>
+                    {{ .Article.Lead }}
+                </strong>
+            </p>
+        </div>
+    {{ end }}
+    {{ if .Article.Content }}
+        {{ range .Article.Content }}
+        <p>
+            {{ . }}
+        </p>
+        {{ end }}
+    {{ end }}
+        <p>
+            {{ .Article.CreatedAt | formatDate }}
+        </p>
+    </main>
+{{ end }}

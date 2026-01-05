@@ -37,7 +37,7 @@ func ExistingURL(w *Website, db *sql.DB) (l []template.URL, err error) {
 
 }
 
-func SelectAllArticles(db *sql.DB) (l []WebsiteRender, err error) {
+func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 
 	sql := `SELECT daily.id, CONCAT(source.url, daily.url) as url, 
 	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
@@ -46,16 +46,18 @@ func SelectAllArticles(db *sql.DB) (l []WebsiteRender, err error) {
 
 	rows, err := db.Query(sql)
 	if err != nil {
-		return []WebsiteRender{}, err
+		return []Website{}, err
 	}
 
+	timeStr := ""
 	for rows.Next() {
-		next := WebsiteRender{}
-		err := rows.Scan(&next.Id, &next.URL, &next.Title, &next.Body, &next.CreatedAt, &next.Keywords, &next.Display, &next.Done)
+		next := Website{}
+		err := rows.Scan(&next.Id, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
 		if err != nil {
-			return []WebsiteRender{}, err
+			return []Website{}, err
 		}
 
+		next.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", timeStr)
 		l = append(l, next)
 	}
 
@@ -226,19 +228,48 @@ func (w *Website) ArticelToDb(ctx context.Context, db *sql.DB) error {
 	return nil
 }
 
-func ScrapArticle(w Website) (s []string, err error) {
+// type Website struct {
+// 	Id        int          `db:"id"`
+// 	SourceId  int          `db:"source_id"`
+// 	URL       template.URL `db:"url" json:"url"`
+// 	Title     string       `db:"title" json:"title"`
+// 	Body      string       `db:"body" json:"body"`
+// 	Blob      []byte       `db:"raw"`
+// 	CreatedAt time.Time    `db:"created_at" json:"created_at"`
+// 	Keywords  string       `db:"keywords" json:"keywords"`
+// 	Display   int          `db:"display" json:"display"`
+// 	Done      int          `db:"done" json:"done"`
+// 	MD5       string       `db:"md5"`
+// }
+
+type ArticleRender struct {
+	Website
+	Lead    string   `db:"lead" json:"lead"`
+	Content []string `db:"content" json:"content"`
+}
+
+func ScrapArticle(w Website) (a ArticleRender, err error) {
 
 	doc, err := htmlquery.Parse(strings.NewReader(w.Body))
 	if err != nil {
-		return s, err
+		return a, err
 	}
+
+	a.Website = w
+
 	title := htmlquery.FindOne(doc, "//h1[@class='article-title']")
 	lead := htmlquery.FindOne(doc, "//p[@class='article-lead']")
 	rest := htmlquery.Find(doc, "//div[@class='articleContent']/p")
+	dateEllement := htmlquery.FindOne(doc, "//div[@class='article-date']/meta")
+	dateString := htmlquery.SelectAttr(dateEllement, "content")
 
-	s = append(s, htmlquery.InnerText(title)+"\n")
+	a.Website.CreatedAt, err = time.Parse("2006-01-02T15:04:05", dateString)
+	if err != nil {
+		a.Website.CreatedAt = w.CreatedAt
+	}
 
-	s = append(s, htmlquery.InnerText(lead)+"\n")
+	a.Website.Title = htmlquery.InnerText(title)
+	a.Lead = htmlquery.InnerText(lead)
 
 	for i := range rest {
 		text := htmlquery.InnerText(rest[i])
@@ -246,7 +277,7 @@ func ScrapArticle(w Website) (s []string, err error) {
 		if text == "" {
 			continue
 		}
-		s = append(s, text)
+		a.Content = append(a.Content, text)
 	}
 
 	// for _, node := range list {
@@ -266,5 +297,5 @@ func ScrapArticle(w Website) (s []string, err error) {
 
 	// }
 
-	return s, nil
+	return a, nil
 }

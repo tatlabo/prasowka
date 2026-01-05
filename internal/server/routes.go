@@ -1,9 +1,11 @@
 package server
 
 import (
+	"html/template"
 	"net/http"
 
 	"prasowka/internal/handlers"
+	"prasowka/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -12,7 +14,15 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 
+	r.SetFuncMap(template.FuncMap{
+		"formatDate": utils.FormatDate,
+		"not":        utils.Not,
+		"equals":     utils.Equals,
+		"notequals":  utils.Notequals,
+	})
+
 	r.LoadHTMLGlob("public/views/*.html")
+
 	r.Static("static", "./static")
 
 	r.Use(cors.New(cors.Config{

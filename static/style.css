@@ -2,6 +2,7 @@
 @import "./open-props.min.css";
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans+JP:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 
 :root {
@@ -44,9 +45,8 @@ html[data-theme="dark"] {
 
 body {
   font-family: var(--font-industrial);
-  font-family: "IBM Plex Sans", sans-serif; 
-  font-weight: var(--font-weight-3);
-  font-size: var(--size-3)
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.8;
 }
 
 .startpage {
@@ -87,6 +87,9 @@ body {
   background-color: var(--pink-7);
 }
 
+h1 {
+  max-inline-size: revert;
+}
 
 /* file-list */
 
@@ -106,7 +109,7 @@ ol.file-list li:nth-child(even) {
 .headers,
 ol.file-list li {
   list-style-position: inside;
-  margin-left: var(--size-fluid-1);
+  margin-inline: var(--size-fluid-6);
   padding: var(--size-1) var(--size-fluid-1);
   max-width: calc(100% - var(--size-fluid-2));
   position: static;
@@ -199,6 +202,8 @@ ol.file-list>li::before {
   counter-increment: item;
   content: counter(item) "";
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   left: var(--size-fluid-1);
   font-weight: bold;
   opacity: 0.1;
@@ -367,7 +372,7 @@ main.search-page {
   overflow: auto;
   display: flex;
   justify-content: start;
-  background-color: var(--surface-30);
+  background-color: var(--surface-1);
   padding: var(--size-2);
   width: 100%;
 }
@@ -585,11 +590,16 @@ time {
 :where(.headers),
 :where(.item-list) {
   display: grid;
-  grid-template-columns: 1fr repeat(3, 12rem);
+  grid-template-columns: 1fr min-content max-content min-content;
 }
 
+:where(.item-list) * {
+  padding-block: 1rem;
+}
 
-
+:where(.item-list) *:not(:first-child) {
+  padding-left: 1rem;
+}
 
 :where(.home-page-container) {
   display: flex;

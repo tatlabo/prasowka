@@ -52,9 +52,6 @@ func (w *Website) SelectByURL(db *sql.DB) error {
 func (w *Website) SelectById(db *sql.DB) error {
 
 	table := "daily"
-	if w.Table != "" {
-		table = w.Table
-	}
 
 	sql := fmt.Sprintf(`SELECT daily.id, CONCAT(source.url, daily.url) as url, 
 	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
