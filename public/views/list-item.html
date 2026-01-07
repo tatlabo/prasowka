@@ -1,0 +1,21 @@
+{{ define "list-item" }}
+<li class="item-list" data-name="{{ .Title }}" data-moddate="{{ .CreatedAt }}">
+
+    <a href="/news/{{ .Id }}" hx-boost="true" hx-target="#preview" hx-swap="innerHTML" hx-get="/news/{{ .Id }}" hx-trigger="click" onClick="showPreview()" class="preview-link">
+        {{ .Title }}
+    </a>
+    
+    <span>
+        {{ if .Done }}v{{ else }}—{{ end }}
+    </span>
+    
+    <time datetime="{{ .CreatedAt }}">
+        {{ .CreatedAt | formatDate }}
+    </time>
+    
+    <a href="{{ .URL }}">
+        {{ .Id }}
+    </a>
+
+</li>
+{{ end }}

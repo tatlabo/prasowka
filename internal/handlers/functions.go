@@ -279,23 +279,9 @@ func ScrapArticle(w Website) (a ArticleRender, err error) {
 		}
 		a.Content = append(a.Content, text)
 	}
+	a.Body = ""
 
-	// for _, node := range list {
-	// 	subpage := Website{}
-
-	// 	a := htmlquery.FindOne(node, "//a")
-	// 	title := htmlquery.InnerText(a)
-	// 	title = strings.TrimSpace(title)
-	// 	link := htmlquery.SelectAttr(a, "href")
-
-	// 	subpage.Title = title
-	// 	subpage.URL = template.URL(link)
-	// 	subpage.CreatedAt = time.Now()
-
-	// 	subpage.SourceId = w.Id
-	// 	subpages = append(subpages, subpage)
-
-	// }
+	fmt.Printf("Scraped struct: \n%#v", a)
 
 	return a, nil
 }

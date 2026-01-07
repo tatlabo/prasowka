@@ -21,7 +21,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		"notequals":  utils.Notequals,
 	})
 
-	r.LoadHTMLGlob("public/views/*.html")
+	r.LoadHTMLGlob("public/views/*")
 
 	r.Static("static", "./static")
 
