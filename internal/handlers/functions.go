@@ -41,8 +41,16 @@ func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 
 	sql := `SELECT daily.id, CONCAT(source.url, daily.url) as url, 
 	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
-	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC;
+	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC, daily.id DESC LIMIT 20;
 	`
+
+	sqlCount := `SELECT COUNT(*) FROM daily;`
+
+	var count int
+	err = db.QueryRow(sqlCount).Scan(&count)
+	if err != nil {
+		return []Website{}, err
+	}
 
 	rows, err := db.Query(sql)
 	if err != nil {
@@ -241,12 +249,6 @@ func (w *Website) ArticelToDb(ctx context.Context, db *sql.DB) error {
 // 	Done      int          `db:"done" json:"done"`
 // 	MD5       string       `db:"md5"`
 // }
-
-type ArticleRender struct {
-	Website
-	Lead    string   `db:"lead" json:"lead"`
-	Content []string `db:"content" json:"content"`
-}
 
 func ScrapArticle(w Website) (a ArticleRender, err error) {
 

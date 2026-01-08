@@ -36,7 +36,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/health", s.healthHandler)
 
-	r.GET("/news", handlers.HandleAllDaily)
+	r.GET("/news", func(c *gin.Context) {
+		handlers.HandleAllDaily(c)
+	})
 
 	r.GET("/news/:id", handlers.HandleProcessById)
 

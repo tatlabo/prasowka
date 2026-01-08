@@ -8,7 +8,9 @@ import (
 	"time"
 )
 
-func getWebsite(sql string, db *sql.DB, w *Website) error {
+func (w *Website) LastSourceWebsite(db *sql.DB) error {
+
+	sql := `SELECT id, url, body, created_at, keywords, display FROM source WHERE url = ? ORDER BY created_at DESC LIMIT 1;`
 
 	timeStr := ""
 	err := db.QueryRow(sql, w.URL).Scan(&w.Id, &w.URL, &w.Body, &timeStr, &w.Keywords, &w.Display)
@@ -17,18 +19,6 @@ func getWebsite(sql string, db *sql.DB, w *Website) error {
 	}
 
 	w.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", timeStr)
-
-	return nil
-
-}
-
-func (w *Website) LastSourceWebsite(db *sql.DB) error {
-
-	sql := `SELECT id, url, body, created_at, keywords, display FROM source WHERE url = ? ORDER BY created_at DESC LIMIT 1;`
-	err := getWebsite(sql, db, w)
-	if err != nil {
-		return err
-	}
 
 	return nil
 
