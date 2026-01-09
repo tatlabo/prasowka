@@ -13,6 +13,11 @@ import (
 
 func main() {
 
+	start := time.Now()
+	defer func() {
+		fmt.Printf("Scan completed in %s\n", time.Since(start))
+	}()
+
 	var path string
 	w := handlers.Website{}
 
