@@ -39,10 +39,13 @@ func ExistingURL(w *Website, db *sql.DB) (l []template.URL, err error) {
 
 func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 
-	sql := `SELECT daily.id, CONCAT(source.url, daily.url) as url, 
+	limit := 25
+	offset := 0
+
+	sql := fmt.Sprintf(`SELECT daily.id, CONCAT(source.url, daily.url) as url, 
 	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
-	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC, daily.id DESC LIMIT 20;
-	`
+	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC LIMIT %d OFFSET %d;
+	`, limit, offset)
 
 	sqlCount := `SELECT COUNT(*) FROM daily;`
 
