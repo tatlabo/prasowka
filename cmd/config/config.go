@@ -11,7 +11,7 @@ func (cf *Config) New() Config {
 	if err := env.Load("././.env"); err != nil {
 		panic(err)
 	}
-	cf.Port = env.Get("PORT", "8888")
-	cf.DNS = env.Get("DNS", "./db/service.sqlite")
+	cf.Port = env.Get("PORT", "8765")
+	cf.DNS = env.Get("DNS", "./db/webservice.db")
 	return *cf
 }

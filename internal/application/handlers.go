@@ -13,7 +13,12 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 
 	list, err := models.SelectAllArticles(app.DB)
 	if err != nil {
-		panic(err)
+		app.Logger.Error("Error: no database found.")
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
+			"Title": "Error Page", // for haeder title
+			"Error": err,
+		})
+		return
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
@@ -31,7 +36,11 @@ func (app *Application) HandleByID(c *gin.Context) {
 	w.Id, _ = strconv.Atoi(id)
 
 	if err := w.SelectById(app.DB); err != nil {
-		panic(err)
+		app.Logger.Error("Error: no database for single article")
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
+			"Title": "Error Page", // for haeder title
+			"Error": err,
+		})
 	}
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
