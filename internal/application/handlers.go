@@ -72,6 +72,7 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 
 	page, err := app.ReadInt(c, "page", 1, 0)
 	if err != nil {
+<<<<<<< HEAD
 		ValidationErrors["Page"] = err
 	}
 
@@ -96,6 +97,14 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 		for i := range pag.TotalPages {
 			pages = append(pages, i+1)
 		}
+=======
+		app.Logger.Error("Error: no database found.")
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
+			"Title": "Error Page", // for haeder title
+			"Error": err,
+		})
+		return
+>>>>>>> d83eca5fd0969efa2f39c913956192f7cc917ca8
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
@@ -115,7 +124,11 @@ func (app *Application) HandleByID(c *gin.Context) {
 	w.Id, _ = strconv.Atoi(id)
 
 	if err := w.SelectById(app.DB); err != nil {
-		panic(err)
+		app.Logger.Error("Error: no database for single article")
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
+			"Title": "Error Page", // for haeder title
+			"Error": err,
+		})
 	}
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
