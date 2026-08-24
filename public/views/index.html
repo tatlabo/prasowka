@@ -3,6 +3,8 @@
 
 {{ template "table-headers" . }}
 
+{{ printf "%v" .Pagination }}
+
 {{ if .List }}
 <ol id="list" class="file-list" type="1">
     {{ range .List }}
@@ -12,19 +14,53 @@
 {{ end }}
 
 <dialog id="modal">
-  <h1>Welcome!</h1>
-  <p>Click Close or press esc to close modal</p>
-  <form method="dialog">
-    <button>Close</button>
-  </form>
+    <h1>Welcome!</h1>
+    <p>Click Close or press esc to close modal</p>
+    <form method="dialog">
+        <button>Close</button>
+    </form>
 </dialog>
 
 <article class="preview-wrapper" id="preview-section" style="display: none;">
     <section class="preview">
-    <button type="button" class="primary close-btn" id="hidePreview" onClick="deletePreview()">x</button>
-    <div id="preview"></div>
+        <button type="button" class="primary close-btn" id="hidePreview" onClick="deletePreview()">x</button>
+        <div id="preview"></div>
     </section>
 </article>
+
+
+<div class="">
+
+    {{ block "pagination" . }}
+    {{ if gt .Pagination.TotalPages 1 }}
+        <nav aria-label="Page navigation example" class="page navigation">
+            <ul class="pagination pagination-md">
+                {{ $ps := .Pagination.PageSize}}
+                {{ range .Pages }}
+                {{ if eq . $.Pagination.Page }}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">
+                            {{ . }}
+                        </span>
+                    </li>
+                    {{ else }}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ . }}&page_size={{ $ps }}">
+                            {{ . }}
+                        </a>
+                    </li>
+
+                    {{ end }}
+                {{ end }}
+
+            </ul>
+        </nav>
+
+    {{ end }}
+
+{{ end }}
+
+</div>
 
 {{ template "footer" . }}
 {{ end }}
@@ -56,5 +92,10 @@
 </ul>
 {{ end }}
 
-{{ block "footer" . }}
+
+{{ define "footer" }}
+<div>
+    footer
+</div>
 {{ end }}
+

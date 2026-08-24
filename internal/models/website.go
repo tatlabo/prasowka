@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"prasowka/internal/filters"
 	"slices"
 	"strings"
 	"time"
@@ -196,6 +197,43 @@ func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 	}
 
 	return l, nil
+
+}
+
+func SelectArticlesWhere(db *sql.DB, f filters.Article) (l []Website, count int, err error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `SELECT COUNT(*) OVER () AS count, daily.id, CONCAT(source.url, daily.url) as url, 
+	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
+	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC
+	LIMIT :limit OFFSET :offset;`
+
+	args := []any{
+		sql.Named("offset", f.PageSize*(f.Page-1)),
+		sql.Named("limit", f.PageSize),
+	}
+
+	rows, err := db.QueryContext(ctx, stmt, args...)
+	if err != nil {
+		return []Website{}, 0, err
+	}
+	defer rows.Close()
+
+	timeStr := ""
+	for rows.Next() {
+		next := Website{}
+		err := rows.Scan(&count, &next.Id, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
+		if err != nil {
+			return []Website{}, 0, err
+		}
+
+		next.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", timeStr)
+		l = append(l, next)
+	}
+
+	return l, count, nil
 
 }
 
@@ -402,8 +440,6 @@ func ScrapArticle(w Website) (a ArticleRender, err error) {
 		a.Content = append(a.Content, text)
 	}
 	a.Body = ""
-
-	fmt.Printf("Scraped struct: \n%#v", a)
 
 	return a, nil
 }

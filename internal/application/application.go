@@ -2,15 +2,14 @@ package application
 
 import (
 	"database/sql"
-
-	"go.uber.org/zap"
 )
 
 type Application struct {
 	// Config         config.Config
 	// Template       *template.Template
-	Logger *zap.SugaredLogger
 	DB     *sql.DB
+	Logger func(msg string)
+
 	// Producter      Producter
 	// Servicer       models.Servicer
 	// UserModel      models.UserModel
@@ -22,9 +21,7 @@ type Application struct {
 	// TemplateData   templateData
 }
 
-func (app *Application) New(logger *zap.SugaredLogger, db *sql.DB) *Application {
-
-	app.Logger = logger
+func (app *Application) New(db *sql.DB) *Application {
 
 	app.DB = db
 

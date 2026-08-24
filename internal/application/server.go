@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -31,7 +32,7 @@ func (app *Application) NewServer() *http.Server {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	app.Logger.Info("Server port: " + server.Addr)
+	fmt.Fprintf(gin.DefaultWriter, "[GIN-debug] Listening and serving HTTP on %s\n", server.Addr)
 
 	return server
 }

@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"prasowka/cmd/config"
-	"prasowka/cmd/logger"
 	"prasowka/cmd/sqldb"
 	"prasowka/internal/application"
+
+	"github.com/gin-gonic/gin"
 )
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
@@ -42,10 +44,11 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 
 func main() {
 
-	var l logger.ZapLogger
-	logger := l.New()
-
 	var app application.Application
+
+	var logger = func(msg string) {
+		fmt.Fprint(gin.DefaultWriter, msg)
+	}
 
 	var cfg config.Config
 	cfg.New()
@@ -53,10 +56,11 @@ func main() {
 	var database sqldb.Sqlite
 	err := database.DbConn(cfg.DNS)
 	if err != nil {
-		logger.Error("Error connection to db")
+		logger("Error connection to db")
+		os.Exit(1)
 	}
 
-	app.New(logger, database.DB)
+	app.New(database.DB)
 	server := app.NewServer()
 
 	// Create a done channel to signal when the shutdown is complete
@@ -72,5 +76,6 @@ func main() {
 
 	// Wait for the graceful shutdown to complete
 	<-done
-	logger.Info("Graceful shutdown complete.")
+	logger("Graceful shutdown complete.")
+
 }
