@@ -70,7 +70,7 @@ func main() {
 	// refresh at 10 past every hour
 	RunEveryHour(func() {
 		scan.ReadSource(database.DB, "https://www.rmf24.pl/")
-	}, 45)
+	}, 01)
 
 	// Run graceful shutdown in a separate goroutine
 	go gracefulShutdown(s, done)

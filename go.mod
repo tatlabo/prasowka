@@ -7,7 +7,6 @@ require (
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.10.1
 	github.com/gofor-little/env v1.0.20
-	github.com/joho/godotenv v1.5.1
 	go.uber.org/zap v1.28.0
 	modernc.org/sqlite v1.42.2
 )
