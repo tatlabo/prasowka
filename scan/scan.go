@@ -1,4 +1,4 @@
-package main
+package scan
 
 import (
 	"context"
@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"os"
+	"log/slog"
 	"prasowka/internal/models"
 	"slices"
-	"strings"
 	"time"
 )
 
@@ -18,36 +17,24 @@ var (
 	ErrConnDb      = fmt.Errorf("Error connection to db.")
 )
 
-func main() {
+func ReadSource(path string) {
 
 	start := time.Now()
 	defer func() {
-		fmt.Printf("Scan completed in %s\n", time.Since(start))
+		slog.Info("Scan completed", "duration", time.Since(start).String())
 	}()
 
-	var path string
 	w := models.Website{}
-
-	if len(os.Args) == 1 {
-		fmt.Println("Please provide a path")
-		os.Exit(1)
-	}
-
-	path = os.Args[1]
-	path = strings.TrimSpace(path)
-	path = strings.TrimRight(path, "/")
 
 	w.URL = template.URL(path)
 
 	if err := w.ProcessWebsite(); err != nil {
-		fmt.Println(fmt.Errorf("Error processing website: %w", err))
-		os.Exit(1)
+		slog.Info("Error processing website: ", "time", time.Now().Format("2006-01-02 15:04:05"))
 	}
 
 	err := ScrapPage(w)
 	if err != nil {
-		fmt.Printf("%v", ErrScaningPage)
-		os.Exit(1)
+		slog.Info("Error scaning page: ", "with", ErrScaningPage)
 	}
 
 }
@@ -97,7 +84,7 @@ func ScrapPage(w models.Website) error {
 
 }
 
-func RefreshSource(w *models.Website, db *sql.DB) ([]models.Website, error) {
+func RefreshSource(w *models.Website, db *sql.DB) (news []models.Website, err error) {
 
 	models.CreateSourceTable(db)
 	models.CreateArticleTable(db)
@@ -105,12 +92,12 @@ func RefreshSource(w *models.Website, db *sql.DB) ([]models.Website, error) {
 	ctx := context.Background()
 	// get Body from source URL
 	if err := w.ProcessWebsite(); err != nil {
-		return []models.Website{}, fmt.Errorf("failed to process source website: %w", err)
+		return news, fmt.Errorf("failed to process source website: %w", err)
 	}
 	// Insert source website to db, get source ID
 	w.CreatedAt = time.Now()
 	if err := w.SourceToDb(ctx, db); err != nil {
-		return []models.Website{}, fmt.Errorf("failed to insert source website to db: %w", err)
+		return news, fmt.Errorf("failed to insert source website to db: %w", err)
 	}
 
 	// get ALL existing articles urls from db
@@ -124,13 +111,13 @@ func RefreshSource(w *models.Website, db *sql.DB) ([]models.Website, error) {
 	if w.Body != "" {
 		subpages, err := models.ParseSourceBody(w)
 		if err != nil {
-			return []models.Website{}, err
+			return news, err
 		}
 
 		l := len(subpages)
 		if l == 0 {
 			log.Println("No subpages found in source body")
-			return []models.Website{}, nil
+			return news, nil
 		}
 		//compare existing articles URL with new subpages
 		for i := range subpages {
@@ -145,6 +132,6 @@ func RefreshSource(w *models.Website, db *sql.DB) ([]models.Website, error) {
 
 	}
 
-	return []models.Website{}, nil
+	return news, nil
 
 }

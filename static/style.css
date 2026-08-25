@@ -385,7 +385,7 @@ main.search-page {
     padding: var(--size-fluid-2);
 } */
 
-nav {
+.navbar {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -395,6 +395,23 @@ nav {
   height: var(--nav-height, 3rem);
 }
 
+
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: var(--size-3) var(--size-fluid-1);
+  max-width: calc(100% - var(--size-fluid-2));
+  margin-inline: var(--size-fluid-6);
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+
+  & .active{
+    font-weight: 700;
+  }
+}
 
 
 .grid-container {

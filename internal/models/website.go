@@ -275,36 +275,6 @@ func ReadFromDbSource(w *Website, db *sql.DB) (subpages []Website, err error) {
 	return []Website{}, nil
 }
 
-func ParseSourceBody(w *Website) ([]Website, error) {
-
-	doc, err := htmlquery.Parse(strings.NewReader(w.Body))
-	if err != nil {
-		return nil, err
-	}
-	list := htmlquery.Find(doc, "//div/div/article/h3")
-
-	subpages := []Website{}
-
-	for _, node := range list {
-		subpage := Website{}
-
-		a := htmlquery.FindOne(node, "//a")
-		title := htmlquery.InnerText(a)
-		title = strings.TrimSpace(title)
-		link := htmlquery.SelectAttr(a, "href")
-
-		subpage.Title = title
-		subpage.URL = template.URL(link)
-		subpage.CreatedAt = time.Now()
-
-		subpage.SourceId = w.Id
-		subpages = append(subpages, subpage)
-
-	}
-
-	return subpages, nil
-}
-
 func AddWebsite(ctx context.Context, db *sql.DB, w *Website) error {
 
 	if err := w.ProcessWebsite(); err != nil {
@@ -380,7 +350,15 @@ func (w *Website) SourceToDb(ctx context.Context, db *sql.DB) error {
 
 	stmt := `INSERT INTO source (url, body, created_at, keywords, display) VALUES (?, ?, ?, ?, ?) RETURNING id;`
 
-	err := db.QueryRow(stmt, w.URL, w.Body, w.CreatedAt.Format("2006-01-02 15:04:05"), w.Keywords, w.Display).Scan(&w.Id)
+	args := []any{
+		sql.Named("url", w.URL),
+		sql.Named("body", w.Body),
+		sql.Named("created_at", w.CreatedAt.Format("2006-01-02 15:04:05")),
+		sql.Named("keyeords", w.Keywords),
+		sql.Named("display", w.Display),
+	}
+
+	err := db.QueryRow(stmt, args...).Scan(&w.Id)
 	if err != nil {
 		return err
 	}

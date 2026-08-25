@@ -13,6 +13,7 @@ import (
 	"prasowka/cmd/config"
 	"prasowka/cmd/sqldb"
 	"prasowka/internal/application"
+	"prasowka/scan"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,6 +61,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	RunEveryHour(func() {
+		scan.ReadSource("https://www.rmf24.pl/")
+	}, 10)
+
 	app.New(database.DB)
 	server := app.NewServer()
 
@@ -78,4 +83,22 @@ func main() {
 	<-done
 	logger("Graceful shutdown complete.")
 
+}
+
+func RunEveryHour(fn func(), n int) {
+	go func() {
+		for {
+			now := time.Now()
+			next := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), n, 0, 0, now.Location())
+
+			// If it's already past 03 minutes this hour, schedule for next hour
+			if !next.After(now) {
+				next = next.Add(time.Hour)
+			}
+
+			time.Sleep(time.Until(next))
+
+			fn()
+		}
+	}()
 }
