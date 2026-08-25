@@ -4,18 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"prasowka/cmd/config"
+	"prasowka/cmd/conf"
+	"prasowka/cmd/server"
 	"prasowka/cmd/sqldb"
 	"prasowka/internal/application"
 	"prasowka/scan"
-
-	"github.com/gin-gonic/gin"
 )
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
@@ -47,41 +47,44 @@ func main() {
 
 	var app application.Application
 
-	var logger = func(msg string) {
-		fmt.Fprint(gin.DefaultWriter, msg)
-	}
-
-	var cfg config.Config
+	var cfg conf.Config
 	cfg.New()
 
 	var database sqldb.Sqlite
 	err := database.DbConn(cfg.DNS)
 	if err != nil {
-		logger("Error connection to db")
+		slog.Info("Error connection to db")
 		os.Exit(1)
 	}
 
-	RunEveryHour(func() {
-		scan.ReadSource("https://www.rmf24.pl/")
-	}, 10)
-
 	app.New(database.DB)
-	server := app.NewServer()
+
+	router := app.Router()
+
+	slog.Info("Starting", "port:", cfg.Port)
+	s := server.NewServer(router)
 
 	// Create a done channel to signal when the shutdown is complete
 	done := make(chan bool, 1)
 
-	// Run graceful shutdown in a separate goroutine
-	go gracefulShutdown(server, done)
+	// refresh at 10 past every hour
+	RunEveryHour(func() {
+		scan.ReadSource(database.DB, "https://www.rmf24.pl/")
+	}, 45)
 
-	err = server.ListenAndServe()
+	// Run graceful shutdown in a separate goroutine
+	go gracefulShutdown(s, done)
+
+	err = s.ListenAndServe()
+	//
+	//
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
 	}
 
 	// Wait for the graceful shutdown to complete
 	<-done
-	logger("Graceful shutdown complete.")
+	slog.Info("Graceful shutdown complete.")
 
 }
 

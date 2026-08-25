@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (app *Application) RegisterRoutes() http.Handler {
+func (app *Application) Router() http.Handler {
 	r := gin.Default()
 
 	r.SetFuncMap(template.FuncMap{
@@ -25,7 +25,7 @@ func (app *Application) RegisterRoutes() http.Handler {
 	r.Static("static", "./static")
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:8888"}, // Add your frontend URL
+		AllowOrigins:     []string{"http://localhost:8099"}, // Add your frontend URL
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
 		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true, // Enable cookies/auth

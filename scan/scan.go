@@ -17,7 +17,7 @@ var (
 	ErrConnDb      = fmt.Errorf("Error connection to db.")
 )
 
-func ReadSource(path string) {
+func ReadSource(db *sql.DB, path string) {
 
 	start := time.Now()
 	defer func() {
@@ -32,22 +32,16 @@ func ReadSource(path string) {
 		slog.Info("Error processing website: ", "time", time.Now().Format("2006-01-02 15:04:05"))
 	}
 
-	err := ScrapPage(w)
+	err := ScrapPage(db, w)
 	if err != nil {
 		slog.Info("Error scaning page: ", "with", ErrScaningPage)
 	}
 
 }
 
-func ScrapPage(w models.Website) error {
+func ScrapPage(db *sql.DB, w models.Website) error {
 
-	db, err := sql.Open("sqlite", "../db/websites.db")
-	if err != nil {
-		return fmt.Errorf("%v,  %s", ErrConnDb, err)
-	}
-	defer db.Close()
-
-	err = models.CreateSourceTable(db)
+	err := models.CreateSourceTable(db)
 	if err != nil {
 		return fmt.Errorf("CreateSourceTable failed; %w", err)
 	}

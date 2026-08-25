@@ -1,4 +1,4 @@
-package config
+package conf
 
 import "github.com/gofor-little/env"
 
@@ -11,7 +11,7 @@ func (cf *Config) New() Config {
 	if err := env.Load("././.env"); err != nil {
 		panic(err)
 	}
-	cf.Port = env.Get("PORT", "8765")
-	cf.DNS = env.Get("DNS", "./db/webservice.db")
+	cf.Port = env.Get("PORT", "8090")
+	cf.DNS = env.Get("DNS", "./database/prasa.db")
 	return *cf
 }
