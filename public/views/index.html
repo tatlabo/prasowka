@@ -31,32 +31,32 @@
 
     {{ block "pagination" . }}
     {{ if gt .Pagination.TotalPages 1 }}
-        <nav aria-label="Page navigation example" class="page navigation">
-            <ul class="pagination pagination-md">
-                {{ $ps := .Pagination.PageSize}}
-                {{ range .Pages }}
-                {{ if eq . $.Pagination.Page }}
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link">
-                            {{ . }}
-                        </span>
-                    </li>
-                    {{ else }}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ . }}&page_size={{ $ps }}">
-                            {{ . }}
-                        </a>
-                    </li>
+    <nav aria-label="Page navigation example" class="page navigation">
+        <ul class="pagination pagination-md">
+            {{ $ps := .Pagination.PageSize}}
+            {{ range .Pages }}
+            {{ if eq . $.Pagination.Page }}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    {{ . }}
+                </span>
+            </li>
+            {{ else }}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ . }}&page_size={{ $ps }}">
+                    {{ . }}
+                </a>
+            </li>
 
-                    {{ end }}
-                {{ end }}
+            {{ end }}
+            {{ end }}
 
-            </ul>
-        </nav>
+        </ul>
+    </nav>
 
     {{ end }}
 
-{{ end }}
+    {{ end }}
 
 </div>
 
@@ -96,4 +96,3 @@
     footer
 </div>
 {{ end }}
-

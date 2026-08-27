@@ -99,7 +99,7 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 
 	}
 
-	c.HTML(http.StatusOK, "index.html", gin.H{
+	c.HTML(http.StatusOK, "index", gin.H{
 		"Title":      "Main website", // for haeder title
 		"List":       articles,
 		"Pagination": pag,
@@ -117,13 +117,13 @@ func (app *Application) HandleByID(c *gin.Context) {
 
 	if err := w.SelectById(app.DB); err != nil {
 		fmt.Fprint(gin.DefaultErrorWriter, "Error selection aricle in Db.")
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error", gin.H{
 			"Title": "Error Page", // for haeder title
 			"Error": err,
 		})
 	}
 
-	c.HTML(http.StatusOK, "detail.html", gin.H{
+	c.HTML(http.StatusOK, "detail", gin.H{
 		"Title":   "Main website", // for haeder title
 		"Article": w,
 	})
@@ -176,7 +176,7 @@ func (app *Application) HandleProcessById(c *gin.Context) {
 }
 
 func (app *Application) ErrorPage(c *gin.Context, err error) {
-	c.HTML(http.StatusOK, "error.html", gin.H{
+	c.HTML(http.StatusOK, "error", gin.H{
 		"Title": "Error Page", // for haeder title
 		"Error": err,
 	})
@@ -184,7 +184,7 @@ func (app *Application) ErrorPage(c *gin.Context, err error) {
 
 func (app *Application) HandleError(c *gin.Context) {
 	err := fmt.Errorf("internal server error: something went wrong")
-	c.HTML(http.StatusOK, "error.html", gin.H{
+	c.HTML(http.StatusOK, "error", gin.H{
 		"Title": "Error Page", // for haeder title
 		"Error": err,
 	})

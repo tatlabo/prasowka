@@ -653,6 +653,10 @@ time {
     all: revert;
   } */
 
+  ol.file-list li {
+    padding-inline: var(--size-fluid-2);
+  }
+
 
   ol.file-list li>*,
   .file-list li span:not(:first-child),
