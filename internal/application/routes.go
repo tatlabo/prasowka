@@ -39,13 +39,13 @@ func (app *Application) Router() http.Handler {
 		app.HandleAllDaily(c)
 	})
 
-	r.GET("/news/:id", app.HandleProcessById)
+	r.GET("/news/:id", app.HandleProcessByID)
 
 	r.GET("/error", app.HandleError)
 
 	r.GET("/json/news", app.HandleAllDailyJSON)
 
-	r.GET("/news/raw/:id", app.HandleProcessById)
+	r.GET("/news/raw/:id", app.HandleProcessByID)
 
 	return r
 }

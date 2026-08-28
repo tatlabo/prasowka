@@ -1,3 +1,4 @@
+// Package scan = skanowanie strony
 package scan
 
 import (
@@ -7,18 +8,18 @@ import (
 	"html/template"
 	"log"
 	"log/slog"
-	"prasowka/internal/models"
 	"slices"
 	"time"
+
+	"prasowka/internal/models"
 )
 
 var (
-	ErrScaningPage = fmt.Errorf("Error in scanning page.")
-	ErrConnDb      = fmt.Errorf("Error connection to db.")
+	ErrScaningPage = fmt.Errorf("error in scanning page")
+	ErrConnDB      = fmt.Errorf("error connection to db")
 )
 
 func ReadSource(db *sql.DB, path string) {
-
 	start := time.Now()
 	defer func() {
 		slog.Info("Scan completed", "duration", time.Since(start).String())
@@ -36,11 +37,9 @@ func ReadSource(db *sql.DB, path string) {
 	if err != nil {
 		slog.Info("Error scaning page: ", "with", ErrScaningPage)
 	}
-
 }
 
 func ScrapPage(db *sql.DB, w models.Website) error {
-
 	err := models.CreateSourceTable(db)
 	if err != nil {
 		return fmt.Errorf("CreateSourceTable failed; %w", err)
@@ -60,7 +59,7 @@ func ScrapPage(db *sql.DB, w models.Website) error {
 
 	for i := range articles {
 		n := models.Website{}
-		n.SourceId = w.Id
+		n.SourceID = w.ID
 		n.URL = articles[i].URL
 		n.Title = articles[i].Title
 		n.CreatedAt = time.Now()
@@ -75,11 +74,9 @@ func ScrapPage(db *sql.DB, w models.Website) error {
 	}
 
 	return nil
-
 }
 
 func RefreshSource(w *models.Website, db *sql.DB) (news []models.Website, err error) {
-
 	models.CreateSourceTable(db)
 	models.CreateArticleTable(db)
 
@@ -90,7 +87,7 @@ func RefreshSource(w *models.Website, db *sql.DB) (news []models.Website, err er
 	}
 	// Insert source website to db, get source ID
 	w.CreatedAt = time.Now()
-	if err := w.SourceToDb(ctx, db); err != nil {
+	if err := w.SourceToDB(ctx, db); err != nil {
 		return news, fmt.Errorf("failed to insert source website to db: %w", err)
 	}
 
@@ -113,7 +110,7 @@ func RefreshSource(w *models.Website, db *sql.DB) (news []models.Website, err er
 			log.Println("No subpages found in source body")
 			return news, nil
 		}
-		//compare existing articles URL with new subpages
+		// compare existing articles URL with new subpages
 		for i := range subpages {
 			currentTitle := subpages[i].URL
 			if slices.Contains(existing, currentTitle) {
@@ -127,5 +124,4 @@ func RefreshSource(w *models.Website, db *sql.DB) (news []models.Website, err er
 	}
 
 	return news, nil
-
 }

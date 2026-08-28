@@ -1,3 +1,4 @@
+// Package models contains the data models used by the application.
 package models
 
 import (
@@ -8,18 +9,19 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"prasowka/internal/filters"
 	"slices"
 	"strings"
 	"time"
+
+	"prasowka/internal/filters"
 
 	"github.com/antchfx/htmlquery"
 	_ "modernc.org/sqlite"
 )
 
 type Website struct {
-	Id        int          `db:"id"`
-	SourceId  int          `db:"source_id"`
+	ID        int          `db:"id"`
+	SourceID  int          `db:"source_id"`
 	URL       template.URL `db:"url" json:"url"`
 	Title     string       `db:"title" json:"title"`
 	Body      string       `db:"body" json:"body"`
@@ -32,8 +34,8 @@ type Website struct {
 }
 
 type IndexRender struct {
-	Id        int          `db:"id"`
-	SourceId  int          `db:"source_id"`
+	ID        int          `db:"id"`
+	SourceID  int          `db:"source_id"`
 	URL       template.URL `db:"url" json:"url"`
 	Title     string       `db:"title" json:"title"`
 	Body      string       `db:"body" json:"body"`
@@ -51,14 +53,13 @@ type ArticleRender struct {
 	Content []string `db:"content" json:"content"`
 }
 
-type SqlInit struct {
+type SQLInit struct {
 	Create string
 	Config []string
 	Delete string
 }
 
 func RefreshSource(w *Website, db *sql.DB) ([]Website, error) {
-
 	CreateSourceTable(db)
 	CreateArticleTable(db)
 
@@ -69,7 +70,7 @@ func RefreshSource(w *Website, db *sql.DB) ([]Website, error) {
 	}
 	// Insert source website to db, get source ID
 	w.CreatedAt = time.Now()
-	if err := w.SourceToDb(ctx, db); err != nil {
+	if err := w.SourceToDB(ctx, db); err != nil {
 		return []Website{}, fmt.Errorf("failed to insert source website to db: %w", err)
 	}
 	// get ALL existing articles urls from db
@@ -91,7 +92,7 @@ func RefreshSource(w *Website, db *sql.DB) ([]Website, error) {
 			log.Println("No subpages found in source body")
 			return []Website{}, nil
 		}
-		//compare existing articles URL with new subpages
+		// compare existing articles URL with new subpages
 		for i := range subpages {
 			currentTitle := subpages[i].URL
 			if slices.Contains(existing, currentTitle) {
@@ -105,19 +106,18 @@ func RefreshSource(w *Website, db *sql.DB) ([]Website, error) {
 	}
 
 	return []Website{}, nil
-
 }
 
 func (w *Website) ProcessWebsite() error {
 	www := string(w.URL)
 	res, err := http.Get(www)
 	if err != nil {
-		return fmt.Errorf("Error getting website: %w", err)
+		return fmt.Errorf("error getting website: %w", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("Error res.StatusCode != http.StatusOK %w", err)
+		return fmt.Errorf("error res.StatusCode != http.StatusOK %w", err)
 	}
 
 	scanner := bufio.NewScanner(res.Body)
@@ -130,7 +130,7 @@ func (w *Website) ProcessWebsite() error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("Error scanning website: %w", err)
+		return fmt.Errorf("error scanning website: %w", err)
 	}
 
 	w.Body = d.String()
@@ -138,7 +138,6 @@ func (w *Website) ProcessWebsite() error {
 }
 
 func ExistingURL(w *Website, db *sql.DB) (l []template.URL, err error) {
-
 	sql := `SELECT id, title, url, created_at FROM daily;`
 
 	timeStr := ""
@@ -146,23 +145,25 @@ func ExistingURL(w *Website, db *sql.DB) (l []template.URL, err error) {
 	if err != nil {
 		return l, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		next := Website{}
-		err := rows.Scan(&next.Id, &next.Title, &next.URL, &timeStr)
+		err := rows.Scan(&next.ID, &next.Title, &next.URL, &timeStr)
 		if err != nil {
 			return l, err
 		}
 
 		l = append(l, next.URL)
 	}
+	if err := rows.Err(); err != nil {
+		return l, err
+	}
 
 	return l, nil
-
 }
 
 func SelectAllArticles(db *sql.DB) (l []Website, err error) {
-
 	limit := 25
 	offset := 0
 
@@ -183,11 +184,12 @@ func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 	if err != nil {
 		return []Website{}, err
 	}
+	defer rows.Close()
 
 	timeStr := ""
 	for rows.Next() {
 		next := Website{}
-		err := rows.Scan(&next.Id, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
+		err := rows.Scan(&next.ID, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
 		if err != nil {
 			return []Website{}, err
 		}
@@ -195,13 +197,14 @@ func SelectAllArticles(db *sql.DB) (l []Website, err error) {
 		next.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", timeStr)
 		l = append(l, next)
 	}
+	if err = rows.Err(); err != nil {
+		return l, err
+	}
 
 	return l, nil
-
 }
 
 func SelectArticlesWhere(db *sql.DB, f filters.Article) (l []Website, count int, err error) {
-
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -221,10 +224,14 @@ func SelectArticlesWhere(db *sql.DB, f filters.Article) (l []Website, count int,
 	}
 	defer rows.Close()
 
+	if err := rows.Err(); err != nil {
+		return []Website{}, 0, err
+	}
+
 	timeStr := ""
 	for rows.Next() {
 		next := Website{}
-		err := rows.Scan(&count, &next.Id, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
+		err := rows.Scan(&count, &next.ID, &next.URL, &next.Title, &next.Body, &timeStr, &next.Keywords, &next.Display, &next.Done)
 		if err != nil {
 			return []Website{}, 0, err
 		}
@@ -234,11 +241,9 @@ func SelectArticlesWhere(db *sql.DB, f filters.Article) (l []Website, count int,
 	}
 
 	return l, count, nil
-
 }
 
 func PragmaConfig(db *sql.DB) error {
-
 	config := [3]string{
 		`PRAGMA journal_mode = WAL;`,
 		`PRAGMA foreign_keys = ON;`,
@@ -253,11 +258,9 @@ func PragmaConfig(db *sql.DB) error {
 	}
 
 	return nil
-
 }
 
-func ReadFromDbSource(w *Website, db *sql.DB) (subpages []Website, err error) {
-
+func ReadFromDBSource(w *Website, db *sql.DB) (subpages []Website, err error) {
 	err = w.LastSourceWebsite(db)
 	if err != nil {
 		return []Website{}, err
@@ -276,7 +279,6 @@ func ReadFromDbSource(w *Website, db *sql.DB) (subpages []Website, err error) {
 }
 
 func AddWebsite(ctx context.Context, db *sql.DB, w *Website) error {
-
 	if err := w.ProcessWebsite(); err != nil {
 		log.Fatal(err)
 	}
@@ -290,7 +292,6 @@ func AddWebsite(ctx context.Context, db *sql.DB, w *Website) error {
 }
 
 func AddWebsiteList(w []Website, db *sql.DB) error {
-
 	batchSize := 100
 	totalInserted := 0
 
@@ -309,7 +310,6 @@ func AddWebsiteList(w []Website, db *sql.DB) error {
 		// Prepare statement for batch
 		stmt, err := tx.Prepare(`INSERT OR IGNORE INTO daily (source_id, url, body, title, created_at, keywords, display) 
 		VALUES (?, ?, ?, ?, ?, ?, ?);`)
-
 		if err != nil {
 			tx.Rollback()
 			return fmt.Errorf("error preparing statement: %w", err)
@@ -318,15 +318,15 @@ func AddWebsiteList(w []Website, db *sql.DB) error {
 		// Insert batch
 		for i := range batch {
 			var (
-				source_id  = batch[i].SourceId
-				url        = batch[i].URL
-				body       = batch[i].Body
-				title      = batch[i].Title
-				created_at = batch[i].CreatedAt.Format("2006-01-02 15:04:05")
-				keywords   = batch[i].Keywords
-				display    = batch[i].Display
+				sourceID  = batch[i].SourceID
+				url       = batch[i].URL
+				body      = batch[i].Body
+				title     = batch[i].Title
+				createdAt = batch[i].CreatedAt.Format("2006-01-02 15:04:05")
+				keywords  = batch[i].Keywords
+				display   = batch[i].Display
 			)
-			_, err = stmt.Exec(source_id, url, body, title, created_at, keywords, display)
+			_, err = stmt.Exec(sourceID, url, body, title, createdAt, keywords, display)
 			if err != nil {
 				stmt.Close()
 				tx.Rollback()
@@ -346,8 +346,7 @@ func AddWebsiteList(w []Website, db *sql.DB) error {
 	return nil
 }
 
-func (w *Website) SourceToDb(ctx context.Context, db *sql.DB) error {
-
+func (w *Website) SourceToDB(ctx context.Context, db *sql.DB) error {
 	stmt := `INSERT INTO source (url, body, created_at, keywords, display) VALUES (?, ?, ?, ?, ?) RETURNING id;`
 
 	args := []any{
@@ -358,7 +357,7 @@ func (w *Website) SourceToDb(ctx context.Context, db *sql.DB) error {
 		sql.Named("display", w.Display),
 	}
 
-	err := db.QueryRow(stmt, args...).Scan(&w.Id)
+	err := db.QueryRow(stmt, args...).Scan(&w.ID)
 	if err != nil {
 		return err
 	}
@@ -366,11 +365,10 @@ func (w *Website) SourceToDb(ctx context.Context, db *sql.DB) error {
 	return nil
 }
 
-func (w *Website) ArticelToDb(ctx context.Context, db *sql.DB) error {
-
+func (w *Website) ArticelToDB(ctx context.Context, db *sql.DB) error {
 	stmt := `INSERT INTO source (url, body, created_at, keywords, display) VALUES (?, ?, ?, ?, ?) RETURNING id;`
 
-	err := db.QueryRow(stmt, w.URL, w.Body, w.CreatedAt.Format("2006-01-02 15:04:05"), w.Keywords, w.Display).Scan(&w.Id)
+	err := db.QueryRow(stmt, w.URL, w.Body, w.CreatedAt.Format("2006-01-02 15:04:05"), w.Keywords, w.Display).Scan(&w.ID)
 	if err != nil {
 		return err
 	}
@@ -379,7 +377,6 @@ func (w *Website) ArticelToDb(ctx context.Context, db *sql.DB) error {
 }
 
 func ScrapArticle(w Website) (a ArticleRender, err error) {
-
 	doc, err := htmlquery.Parse(strings.NewReader(w.Body))
 	if err != nil {
 		return a, err

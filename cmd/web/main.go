@@ -44,9 +44,6 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 }
 
 func main() {
-
-	var app application.Application
-
 	var cfg conf.Config
 	cfg.New()
 
@@ -57,7 +54,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	app.New(database.DB)
+	app := application.New(database.DB)
 
 	router := app.Router()
 
@@ -70,7 +67,7 @@ func main() {
 	// refresh at 10 past every hour
 	RunEveryHour(func() {
 		scan.ReadSource(database.DB, "https://www.rmf24.pl/")
-	}, 01)
+	}, 0o1)
 
 	// Run graceful shutdown in a separate goroutine
 	go gracefulShutdown(s, done)
@@ -85,7 +82,6 @@ func main() {
 	// Wait for the graceful shutdown to complete
 	<-done
 	slog.Info("Graceful shutdown complete.")
-
 }
 
 func RunEveryHour(fn func(), n int) {

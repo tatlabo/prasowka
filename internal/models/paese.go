@@ -9,7 +9,6 @@ import (
 )
 
 func ParseSourceBody(w *Website) ([]Website, error) {
-
 	doc, err := htmlquery.Parse(strings.NewReader(w.Body))
 	if err != nil {
 		return nil, err
@@ -30,7 +29,7 @@ func ParseSourceBody(w *Website) ([]Website, error) {
 		subpage.URL = template.URL(link)
 		subpage.CreatedAt = time.Now()
 
-		subpage.SourceId = w.Id
+		subpage.SourceID = w.ID
 		subpages = append(subpages, subpage)
 
 	}

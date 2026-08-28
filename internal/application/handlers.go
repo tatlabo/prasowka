@@ -5,23 +5,24 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
+
 	"prasowka/internal/filters"
 	"prasowka/internal/models"
 	"prasowka/internal/pagination"
-	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	ErrId  = fmt.Errorf("Błąd id")
+	ErrID  = fmt.Errorf("błąd id")
 	ErrInt = fmt.Errorf("wymagana liczba całkowita")
-	ErrUrl = fmt.Errorf("Bład w adresie url")
+	ErrURL = fmt.Errorf("bład w adresie url")
 
 	ErrRequired       = fmt.Errorf("wymagane")
-	ErrReqMin         = fmt.Errorf("min.")
-	ErrReqMax         = fmt.Errorf("max.")
+	ErrReqMin         = fmt.Errorf("min")
+	ErrReqMax         = fmt.Errorf("max")
 	ErrEmailFormat    = fmt.Errorf("nieporawny format email")
 	ErrEmailDuplacate = fmt.Errorf("adres email już zarejstrowany")
 
@@ -29,15 +30,15 @@ var (
 
 	ErrIncorect = fmt.Errorf("niepoprawne")
 
-	ErrUpdated = fmt.Errorf("Błąd aktualizacji. Nieaktualne dane. Spróbuj raz jeszcze.")
+	ErrUpdated = fmt.Errorf("błąd aktualizacji. Nieaktualne dane. Spróbuj raz jeszcze")
 
-	ErrUser = fmt.Errorf("Nie odnaleziono takiego użytkownika.")
+	ErrUser = fmt.Errorf("nie odnaleziono takiego użytkownika")
 
 	ErrNotFound         = fmt.Errorf("nie odnaleziono danej pozycji/produktu w bazie danych")
 	ErrDeadlineExceeded = fmt.Errorf("przekroczono limit czasu zapytania")
 )
 
-func (a *Application) ReadInt(c *gin.Context, key string, constructive int, max int) (int, error) {
+func (app *Application) ReadInt(c *gin.Context, key string, constructive int, max int) (int, error) {
 	i := constructive
 
 	if s, ok := c.GetQuery(key); ok {
@@ -60,11 +61,9 @@ func (a *Application) ReadInt(c *gin.Context, key string, constructive int, max 
 	}
 
 	return i, nil
-
 }
 
 func (app *Application) HandleAllDaily(c *gin.Context) {
-
 	ValidationErrors := make(map[string]error)
 
 	var pag pagination.Pagination
@@ -87,7 +86,7 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 	articles, total, err := models.SelectArticlesWhere(app.DB, f)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			ValidationErrors["NoteErr"] = fmt.Errorf("Nie udało się pobrać notatek, przekroczono limit czasu.")
+			ValidationErrors["NoteErr"] = fmt.Errorf("nie udało się pobrać notatek, przekroczono limit czasu")
 		}
 	}
 
@@ -109,13 +108,12 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 }
 
 func (app *Application) HandleByID(c *gin.Context) {
-
 	id := c.Param("id")
 
 	w := models.Website{}
-	w.Id, _ = strconv.Atoi(id)
+	w.ID, _ = strconv.Atoi(id)
 
-	if err := w.SelectById(app.DB); err != nil {
+	if err := w.SelectByID(app.DB); err != nil {
 		fmt.Fprint(gin.DefaultErrorWriter, "Error selection aricle in Db.")
 		c.HTML(http.StatusInternalServerError, "error", gin.H{
 			"Title": "Error Page", // for haeder title
@@ -131,7 +129,6 @@ func (app *Application) HandleByID(c *gin.Context) {
 }
 
 func (app *Application) HandleAllDailyJSON(c *gin.Context) {
-
 	list, err := models.SelectAllArticles(app.DB)
 	if err != nil {
 		panic(err)
@@ -140,7 +137,7 @@ func (app *Application) HandleAllDailyJSON(c *gin.Context) {
 	c.JSON(http.StatusOK, list)
 }
 
-func (app *Application) HandleProcessById(c *gin.Context) {
+func (app *Application) HandleProcessByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -148,8 +145,8 @@ func (app *Application) HandleProcessById(c *gin.Context) {
 		return
 	}
 
-	w := models.Website{Id: id}
-	if err := w.SelectById(app.DB); err != nil {
+	w := models.Website{ID: id}
+	if err := w.SelectByID(app.DB); err != nil {
 		app.ErrorPage(c, err)
 		return
 	}
@@ -166,7 +163,6 @@ func (app *Application) HandleProcessById(c *gin.Context) {
 		}
 	}
 	a, err := models.ScrapArticle(w)
-
 	if err != nil {
 		app.ErrorPage(c, err)
 		return
