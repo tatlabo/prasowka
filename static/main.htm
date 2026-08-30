@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main website</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="http://localhost:8888/static/favicon.ico" type="image/x-icon">
+
+    <script src="htmxjs" defer="defer">
+    </script>
+    <script src="scriptjs" defer="defer">
+    </script>
+
+    <style>
+        .htmx-indicator {
+            opacity: 0
+        }
+
+        .htmx-request .htmx-indicator {
+            opacity: 1;
+            transition: opacity 200ms ease-in;
+        }
+
+        .htmx-request.htmx-indicator {
+            opacity: 1;
+            transition: opacity 200ms ease-in;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <button id="theme-toggle">☽</button>
+    </nav>
+
+
+
+
+    <ul id="list-headers" class="file-list headers">
+        <li>
+            <span id="sort-name" data-sort-type="name" data-ascending="true">
+                nazwa
+            </span>
+        </li>
+
+        <li>
+            <span id="sort-size" data-sort-type="size" data-ascending="true">
+                kategoria
+            </span>
+        </li>
+        <li>
+            <span id="sort-date" data-sort-type="moddate" data-ascending="true">
+                data
+            </span>
+        </li>
+    </ul>
+
+
+
+    <ol id="list" class="file-list" type="1">
+
+
+        <li class="item-list" data-name="Lekarze usunęli 19-latce gigantycznego guza. Miał 25 cm"
+            data-moddate="2026-08-27 16:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/604" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/604" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="604">
+                Lekarze usunęli 19-latce gigantycznego guza. Miał 25 cm
+            </a>
+
+            <span data-id="604">
+                v
+            </span>
+
+            <time datetime="2026-08-27 16:01:00 +0000 UTC">
+                2026-08-27 16:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/slaskie/news-lekarze-usuneli-19-latce-gigantycznego-guza-mial-25-cm,nIdn,1015397">
+                604
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list"
+            data-name="Agresywne psy będą odbierane i obejmowane zakazem adopcji? Nowy pomysł w Sejmie"
+            data-moddate="2026-08-27 16:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/605" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/605" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="605">
+                Agresywne psy będą odbierane i obejmowane zakazem adopcji? Nowy pomysł w Sejmie
+            </a>
+
+            <span data-id="605">
+                —
+            </span>
+
+            <time datetime="2026-08-27 16:01:00 +0000 UTC">
+                2026-08-27 16:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/polska/news-agresywne-psy-beda-odbierane-i-obejmowane-zakazem-adopcji-no,nIdn,1015388">
+                605
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Powódź na granicy Nepalu i Tybetu zbiera śmiertelne żniwo. Nowy bilans ofiar"
+            data-moddate="2026-08-27 16:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/606" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/606" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="606">
+                Powódź na granicy Nepalu i Tybetu zbiera śmiertelne żniwo. Nowy bilans ofiar
+            </a>
+
+            <span data-id="606">
+                —
+            </span>
+
+            <time datetime="2026-08-27 16:01:00 +0000 UTC">
+                2026-08-27 16:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/swiat/news-powodz-na-granicy-nepalu-i-tybetu-zbiera-smiertelne-zniwo-no,nIdn,1015395">
+                606
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list"
+            data-name="Tu powstaje najwyższa estakada w Polsce. Kiedy kierowcy pojadą nowym odcinkiem S19?"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/597" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/597" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="597">
+                Tu powstaje najwyższa estakada w Polsce. Kiedy kierowcy pojadą nowym odcinkiem S19?
+            </a>
+
+            <span data-id="597">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/rzeszow/news-tu-powstaje-najwyzsza-estakada-w-polsce-kiedy-kierowcy-pojad,nIdn,1015385">
+                597
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list"
+            data-name="Park imienia Łukasza Litewki powstanie w Sosnowcu. Miasto upamiętni tragicznie zmarłego posła"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/598" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/598" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="598">
+                Park imienia Łukasza Litewki powstanie w Sosnowcu. Miasto upamiętni tragicznie zmarłego posła
+            </a>
+
+            <span data-id="598">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/slaskie/news-park-imienia-lukasza-litewki-powstanie-w-sosnowcu-miasto-upa,nIdn,1015379">
+                598
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Memoriał Wagnera już w ten weekend. Najlepsze drużyny świata i wielkie emocje"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/599" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/599" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="599">
+                Memoriał Wagnera już w ten weekend. Najlepsze drużyny świata i wielkie emocje
+            </a>
+
+            <span data-id="599">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/krakow/news-memorial-wagnera-juz-w-ten-weekend-najlepsze-druzyny-swiata-,nIdn,1015374">
+                599
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Kolejne śledztwo ws. słów Grzegorza Brauna. Znów chodzi o historię"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/600" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/600" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="600">
+                Kolejne śledztwo ws. słów Grzegorza Brauna. Znów chodzi o historię
+            </a>
+
+            <span data-id="600">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/polityka/news-kolejne-sledztwo-ws-slow-grzegorza-brauna-znow-chodzi-o-hist,nIdn,1015367">
+                600
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Wracają upały i burze. IMGW wydał ostrzeżenia"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/601" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/601" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="601">
+                Wracają upały i burze. IMGW wydał ostrzeżenia
+            </a>
+
+            <span data-id="601">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a href="https://www.rmf24.pl//fakty/pogoda/news-wracaja-upaly-i-burze-imgw-wydal-ostrzezenia,nIdn,1015386">
+                601
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Nie żyje „rzeźnik Bałkanów”, skazany za ludobójstwo Ratko Mladić"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/602" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/602" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="602">
+                Nie żyje „rzeźnik Bałkanów”, skazany za ludobójstwo Ratko Mladić
+            </a>
+
+            <span data-id="602">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/swiat/news-nie-zyje-rzeznik-balkanow-skazany-za-ludobojstwo-ratko-mladi,nIdn,1015389">
+                602
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="„Chirurgiczny ChatGPT”. Pierwsza operacja mózgu z bieżącą asystą AI udana"
+            data-moddate="2026-08-27 15:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/603" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/603" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="603">
+                „Chirurgiczny ChatGPT”. Pierwsza operacja mózgu z bieżącą asystą AI udana
+            </a>
+
+            <span data-id="603">
+                —
+            </span>
+
+            <time datetime="2026-08-27 15:01:00 +0000 UTC">
+                2026-08-27 15:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/nauka/news-chirurgiczny-chatgpt-pierwsza-operacja-mozgu-z-biezaca-asyst,nIdn,1015343">
+                603
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Akcja CBA na Dolnym Śląsku. Nieoficjalnie: Chodzi o aferę powodziową"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/587" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/587" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="587">
+                Akcja CBA na Dolnym Śląsku. Nieoficjalnie: Chodzi o aferę powodziową
+            </a>
+
+            <span data-id="587">
+                v
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/wroclaw/news-akcja-cba-na-dolnym-slasku-nieoficjalnie-chodzi-o-afere-powo,nIdn,1015329">
+                587
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Szokujące odkrycie w lesie pod Czaplinkiem. Pies zamknięty w worku"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/588" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/588" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="588">
+                Szokujące odkrycie w lesie pod Czaplinkiem. Pies zamknięty w worku
+            </a>
+
+            <span data-id="588">
+                v
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/szczecin/news-szokujace-odkrycie-w-lesie-pod-czaplinkiem-pies-zamkniety-w-,nIdn,1015314">
+                588
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Prezydent Mysłowic: Ktoś chciał mnie zabić. Mogę się domyślać kto"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/589" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/589" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="589">
+                Prezydent Mysłowic: Ktoś chciał mnie zabić. Mogę się domyślać kto
+            </a>
+
+            <span data-id="589">
+                v
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/slaskie/news-prezydent-myslowic-ktos-chcial-mnie-zabic-moge-sie-domyslac-,nIdn,1015306">
+                589
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Zakopane odmawia transkrypcji małżeństw jednopłciowych. „Zamęt prawny”"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/590" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/590" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="590">
+                Zakopane odmawia transkrypcji małżeństw jednopłciowych. „Zamęt prawny”
+            </a>
+
+            <span data-id="590">
+                —
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//regiony/zakopane/news-zakopane-odmawia-transkrypcji-malzenstw-jednoplciowych-zamet,nIdn,1015307">
+                590
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="USA i Kanada nakładają kolejne cła. O czym marzy Trump?"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/591" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/591" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="591">
+                USA i Kanada nakładają kolejne cła. O czym marzy Trump?
+            </a>
+
+            <span data-id="591">
+                —
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/swiat/news-usa-i-kanada-nakladaja-kolejne-cla-o-czym-marzy-trump,nIdn,1015228">
+                591
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list" data-name="Trump o wizycie szefa CIA w Moskwie: Coś może wyniknąć"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/592" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/592" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="592">
+                Trump o wizycie szefa CIA w Moskwie: Coś może wyniknąć
+            </a>
+
+            <span data-id="592">
+                —
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/swiat/news-trump-o-wizycie-szefa-cia-w-moskwie-cos-moze-wyniknac,nIdn,1015225">
+                592
+            </a>
+
+        </li>
+
+
+
+        <li class="item-list"
+            data-name="Francja: Kierowca celowo wjechał w tłum. „Zatrzymano osobę pochodzenia rosyjskiego”"
+            data-moddate="2026-08-27 11:01:00 +0000 UTC">
+
+            <a href="http://localhost:8888/news/593" hx-boost="true" hx-target="#preview" hx-swap="innerHTML"
+                hx-get="/news/593" hx-trigger="click" onclick="showPreview(event)" class="preview-link" data-id="593">
+                Francja: Kierowca celowo wjechał w tłum. „Zatrzymano osobę pochodzenia rosyjskiego”
+            </a>
+
+            <span data-id="593">
+                —
+            </span>
+
+            <time datetime="2026-08-27 11:01:00 +0000 UTC">
+                2026-08-27 11:01:00
+            </time>
+
+            <a
+                href="https://www.rmf24.pl//fakty/swiat/news-francja-kierowca-celowo-wjechal-w-tlum-zatrzymano-osobe-poch,nIdn,1015313">
+                593
+            </a>
+
+        </li>
+
+
+    </ol>
+
+
+    <dialog id="modal">
+        <h1>Welcome!</h1>
+        <p>Click Close or press esc to close modal</p>
+        <form method="dialog">
+            <button>Close</button>
+        </form>
+    </dialog>
+
+    <article class="preview-wrapper" id="preview-section" style="display: none;">
+        <section class="preview">
+            <button type="button" class="primary close-btn" id="hidePreview" onclick="deletePreview()">x</button>
+            <div id="preview"></div>
+        </section>
+    </article>
+
+
+    <div class="">
+
+
+
+        <nav aria-label="Page navigation example" class="page navigation">
+            <ul class="pagination pagination-md">
+
+
+
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">
+                        1
+                    </span>
+                </li>
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=2&amp;page_size=17">
+                        2
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=3&amp;page_size=17">
+                        3
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=4&amp;page_size=17">
+                        4
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=5&amp;page_size=17">
+                        5
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=6&amp;page_size=17">
+                        6
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=7&amp;page_size=17">
+                        7
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=8&amp;page_size=17">
+                        8
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=9&amp;page_size=17">
+                        9
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=10&amp;page_size=17">
+                        10
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=11&amp;page_size=17">
+                        11
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=12&amp;page_size=17">
+                        12
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=13&amp;page_size=17">
+                        13
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=14&amp;page_size=17">
+                        14
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=15&amp;page_size=17">
+                        15
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=16&amp;page_size=17">
+                        16
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=17&amp;page_size=17">
+                        17
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=18&amp;page_size=17">
+                        18
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=19&amp;page_size=17">
+                        19
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=20&amp;page_size=17">
+                        20
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=21&amp;page_size=17">
+                        21
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=22&amp;page_size=17">
+                        22
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=23&amp;page_size=17">
+                        23
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=24&amp;page_size=17">
+                        24
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=25&amp;page_size=17">
+                        25
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=26&amp;page_size=17">
+                        26
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=27&amp;page_size=17">
+                        27
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=28&amp;page_size=17">
+                        28
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=29&amp;page_size=17">
+                        29
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=30&amp;page_size=17">
+                        30
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=31&amp;page_size=17">
+                        31
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=32&amp;page_size=17">
+                        32
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=33&amp;page_size=17">
+                        33
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=34&amp;page_size=17">
+                        34
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=35&amp;page_size=17">
+                        35
+                    </a>
+                </li>
+
+
+
+
+                <li class="page-item">
+                    <a class="page-link" href="http://localhost:8888/?page=36&amp;page_size=17">
+                        36
+                    </a>
+                </li>
+
+
+
+
+            </ul>
+        </nav>
+
+
+
+
+
+    </div>
+
+
+    <div>
+        footer
+    </div>
+
+</body>
+
+</html>

@@ -1,12 +1,12 @@
 {{ define "list-item" }}
 <li class="item-list" data-name="{{ .Title }}" data-moddate="{{ .CreatedAt }}">
 
-    <a href="/news/{{ .Id }}" hx-boost="true" hx-target="#preview" hx-swap="innerHTML" hx-get="/news/{{ .Id }}"
-        hx-trigger="click" onClick="showPreview(event)" class="preview-link" data-id="{{ .Id }}">
+    <a href="/news/{{ .ID }}" hx-boost="true" hx-target="#preview" hx-swap="innerHTML" hx-get="/news/{{ .ID }}"
+        hx-trigger="click" onClick="showPreview(event)" class="preview-link" data-id="{{ .ID }}">
         {{ .Title }}
     </a>
 
-    <span data-id="{{ .Id }}">
+    <span data-id="{{ .ID }}">
         {{ if .Done }}v{{ else }}—{{ end }}
     </span>
 
@@ -15,7 +15,7 @@
     </time>
 
     <a href="{{ .URL }}">
-        {{ .Id }}
+        {{ .ID }}
     </a>
 
 </li>

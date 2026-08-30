@@ -36,17 +36,12 @@ html[data-theme="light"] {
 
 
 html[data-theme="dark"] {
+  /* --surface-2: rgb(29, 53, 29);
+  --surface-3: rgba(155, 107, 115, 0.075); */
   color-scheme: dark;
   color: var(--text-2);
 }
 
-li {
-  max-inline-size: unset;
-}
-
-ol, ul {
-  padding-inline-start: unset;
-}
 
 body {
   font-family: var(--font-industrial);
@@ -96,49 +91,57 @@ h1 {
   max-inline-size: revert;
 }
 
+/* file-list */
 
-
-.file-list {
+ol.file-list {
   font-size: var(--size-3);
-  margin-inline: 5vw;
-
-
-  & li:nth-child(odd) {
-    background: var(--surface-2);
-  }
-
-  & li:nth-child(even) {
-    background: var(--surface-1);
-  }
-
-  &.headers li:first-child {
-    padding-left: 0;
-  }
-
-  &.headers li:last-child {
-    justify-self: end;
-  }
-
-  & * {
-    word-wrap: break-word;
-  }
-
-  & li a:nth-child(1) {
-    grid-column: 1;
-    font-weight: bold;
-    color: var(--text-1);
-  }
 }
+
+ol.file-list li:nth-child(odd) {
+  background: var(--surface-2);
+}
+
+ol.file-list li:nth-child(even) {
+  background: var(--surface-1);
+}
+
+.button-container,
+.headers,
+ol.file-list li {
+  list-style-position: inside;
+  margin-inline: var(--size-fluid-6);
+  padding: var(--size-1) var(--size-fluid-1);
+  max-width: calc(100% - var(--size-fluid-2));
+  position: static;
+  top: 0;
+  left: 0;
+}
+
 
 
 .headers {
   padding-block: var(--size-3);
+}
 
-  & li span:hover {
-    display: inline-block;
-    cursor: pointer;
-  }
+.file-list.headers li:first-child {
+  padding-left: 0;
+}
 
+.file-list.headers li:last-child {
+  justify-self: end;
+}
+
+
+.headers li span:hover {
+  display: inline-block;
+  cursor: pointer;
+}
+
+ol.file-list li::marker {
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  right: 0;
 }
 
 .item-data {
@@ -153,10 +156,60 @@ h1 {
 
 
 
+
+ol.file-list {
+  counter-reset: item;
+  padding-left: 0;
+}
+
+.file-list * {
+  word-wrap: break-word;
+}
+
+
+
+/* .headers li:not(:first-child),
+.file-list li span:not(:first-child),
+.file-list time {
+  justify-self: end;
+} */
+
+
+ol.file-list li {
+  position: relative;
+  padding-left: calc(2* var(--size-fluid-2));
+  list-style: none;
+}
+
+.file-list.headers {
+  padding-left: calc(2* var(--size-fluid-2));
+}
+
+
+.file-list li a:nth-child(1) {
+  grid-column: 1;
+  font-weight: bold;
+  color: var(--text-1);
+}
+
 .navbar {
   height: 3rem;
 }
 
+
+
+ol.file-list>li::before {
+  counter-increment: item;
+  content: counter(item) "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: var(--size-fluid-1);
+  font-weight: bold;
+  opacity: 0.1;
+  font-size: var(--size-3);
+
+}
 
 .headers {
   display: grid;
@@ -164,6 +217,7 @@ h1 {
 }
 
 .button-container {
+
   padding-block: var(--size-fluid-2);
 }
 
@@ -475,7 +529,6 @@ main.search-page {
 
 time {
   justify-self: end;
-  font-size: .875rem;
 }
 
 .dir-item *:first-child {
@@ -552,21 +605,26 @@ time {
 
   .file-list li {
     max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    max-width: unset;
-    padding-inline: var(--size-fluid-2);
+
   }
-  
-  
+
   .item-list,
   .file-list {
-    margin-inline: unset;
     width: 100svw;
     padding: 0;
   }
 
 
+  ol.file-list>li::before {
+    counter-increment: item;
+    content: counter(item) ".";
+    position: absolute;
+    left: var(--size-fluid-2);
+    font-weight: bold;
+    opacity: 0.1;
+    font-size: var(--size-4);
+
+  }
 
   .item-id {
     display: none;
@@ -580,13 +638,27 @@ time {
     padding-left: unset;
   }
 
+  ol.file-list li {
+    display: flex;
+    flex-direction: column;
+    max-width: unset;
+  }
 
   :where(.item-list) * {
     padding-block: unset;
   }
 
+  /* ol.file-list li:nth-child(n),
+  ol.file-list li:nth-child(2n+1) {
+    all: revert;
+  } */
 
-  .file-list li>*,
+  ol.file-list li {
+    padding-inline: var(--size-fluid-2);
+  }
+
+
+  ol.file-list li>*,
   .file-list li span:not(:first-child),
   .file-list time {
 
@@ -594,13 +666,13 @@ time {
     text-align: left;
   }
 
-  .file-list>li::before {
+  ol.file-list>li::before {
     font-size: var(--size-3);
     left: var(--size-fluid-0);
   }
 
   .headers,
-  .file-list li {
+  ol.file-list li {
     margin-left: 0
   }
 
