@@ -4,6 +4,8 @@
 *.dll
 *.so
 *.dylib
+*.db-shm
+*.db-wal
 
 # Test binary, built with "go test -c"
 *.test
@@ -32,6 +34,6 @@ main
 # OS X generated file
 .DS_Store
 
-/database
-database
+/database/*
+database/
 

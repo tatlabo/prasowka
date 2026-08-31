@@ -10,6 +10,9 @@
   --nav-height: 4rem;
 }
 
+.logo {
+  color: var(--text-1)
+}
 
 [data-theme="light"] {
   --surface-30: rgb(222, 226, 230, .68);
@@ -44,7 +47,8 @@ li {
   max-inline-size: unset;
 }
 
-ol, ul {
+ol,
+ul {
   padding-inline-start: unset;
 }
 
@@ -97,11 +101,31 @@ h1 {
 }
 
 
+.file-list,
+.navbar,
+.footer {
+  margin-inline: 5vw;
+}
+
+
+.navbar {
+  margin-block-start: 1rem;
+  display: flex;
+  align-items: center;
+  height: var(--nav-height, 3rem);
+  justify-content: space-between;
+
+  & a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: 900;
+  }
+}
+
+
 
 .file-list {
   font-size: var(--size-3);
-  margin-inline: 5vw;
-
 
   & li:nth-child(odd) {
     background: var(--surface-2);
@@ -128,6 +152,10 @@ h1 {
     font-weight: bold;
     color: var(--text-1);
   }
+
+  & li {
+    padding-inline: 1.25rem;
+  }
 }
 
 
@@ -138,6 +166,11 @@ h1 {
     display: inline-block;
     cursor: pointer;
   }
+
+  &.file-list li {
+    background: unset;
+  }
+
 
 }
 
@@ -266,16 +299,6 @@ main.search-page {
 /* #preview .choroma code {
     padding: var(--size-fluid-2);
 } */
-
-.navbar {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding-right: var(--size-fluid-1);
-  position: sticky;
-  inset: 1rem 1rem auto auto;
-  height: var(--nav-height, 3rem);
-}
 
 
 
@@ -413,33 +436,6 @@ main.search-page {
   }
 }
 
-/* Item list styling */
-/* .item-list {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid var(--surface-30);
-}
-
-.item-list:hover {
-  background-color: var(--surface-30);
-}
-
-.item-id {
-  flex: 1;
-  font-family: monospace;
-} */
-
-
-/* .item-list {
-  display: flex;
-  flex-direction: ;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid var(--surface-30);
-} */
 
 .dir-item {
   display: grid;
@@ -549,21 +545,25 @@ time {
   }
 
 
+  .file-list li,
+  .headers {
+    padding-inline: var(--size-fluid-2);
+  }
 
   .file-list li {
     max-width: 100%;
     display: flex;
     flex-direction: column;
     max-width: unset;
-    padding-inline: var(--size-fluid-2);
+    padding-block: .75rem;
   }
-  
-  
+
+
   .item-list,
   .file-list {
     margin-inline: unset;
     width: 100svw;
-    padding: 0;
+
   }
 
 
@@ -599,7 +599,6 @@ time {
     left: var(--size-fluid-0);
   }
 
-  .headers,
   .file-list li {
     margin-left: 0
   }
@@ -609,4 +608,12 @@ time {
     display: flex;
     justify-content: center;
   }
+
+  .pagination {
+    max-width: unset;
+    margin-inline: unset;
+  }
+
+
+
 }
