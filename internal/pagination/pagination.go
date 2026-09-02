@@ -1,3 +1,4 @@
+// Package pagination to paginate news
 package pagination
 
 type PaginationErr struct {
@@ -18,7 +19,6 @@ type Pagination struct {
 }
 
 func NewPagination(page, pageSize, total int) Pagination {
-
 	totalPages := (total + pageSize - 1) / pageSize
 
 	if page < 1 {
@@ -37,5 +37,4 @@ func NewPagination(page, pageSize, total int) Pagination {
 		PrevPage:   page - 1,
 		NextPage:   page + 1,
 	}
-
 }

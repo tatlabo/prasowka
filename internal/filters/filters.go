@@ -1,8 +1,10 @@
+// Package filters - filter the news
 package filters
 
 import (
-	"prasowka/internal/pagination"
 	"time"
+
+	"prasowka/internal/pagination"
 )
 
 type ProductFilter struct {
@@ -35,8 +37,8 @@ type Article struct {
 }
 
 type ServiceFilter struct {
-	UserId    int
-	ProductId int
+	UserID    int
+	ProductID int
 	Name      string
 	UserName  string
 	Status    string

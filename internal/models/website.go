@@ -209,12 +209,16 @@ func SelectArticlesWhere(db *sql.DB, f filters.Article) (l []Website, count int,
 
 	stmt := `SELECT COUNT(*) OVER () AS count, daily.id, CONCAT(source.url, daily.url) as url, 
 	daily.title, daily.body, daily.created_at, daily.keywords, daily.display, daily.done 
-	FROM daily JOIN source ON daily.source_id = source.id ORDER BY daily.created_at DESC
+	FROM daily JOIN source ON daily.source_id = source.id 
+	WHERE 
+	(LOWER(daily.title) LIKE '%' || LOWER(:title) || '%' OR :title = '')
+	ORDER BY daily.created_at DESC
 	LIMIT :limit OFFSET :offset;`
 
 	args := []any{
 		sql.Named("offset", f.PageSize*(f.Page-1)),
 		sql.Named("limit", f.PageSize),
+		sql.Named("title", f.Title),
 	}
 
 	rows, err := db.QueryContext(ctx, stmt, args...)

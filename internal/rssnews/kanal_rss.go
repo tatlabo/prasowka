@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Feed struct {
@@ -21,16 +22,19 @@ type Channel struct {
 	Link          string `xml:"link"`
 	Language      string `xml:"language"`
 	PubDate       string `xml:"pubDate"`
+	PubTime       time.Time
 	LastBuildDate string `xml:"lastBuildDate"`
+	LastBuilTime  time.Time
 	Items         []Item `xml:"item"`
 }
 
 type Item struct {
-	Title       string    `xml:"title"`
-	Description string    `xml:"description"`
-	Link        string    `xml:"link"`
-	GUID        string    `xml:"guid"`
-	PubDate     string    `xml:"pubDate"`
+	Title       string `xml:"title"`
+	Description string `xml:"description"`
+	Link        string `xml:"link"`
+	GUID        int    `xml:"guid"`
+	PubDate     string `xml:"pubDate"`
+	PubTime     time.Time
 	Category    string    `xml:"category"`
 	Enclosure   Enclosure `xml:"enclosure"`
 }
@@ -94,7 +98,7 @@ func CreateArticlesTable(db *sql.DB) error {
 	title TEXT NOT NULL, 
 	description TEXT NOT NULL, 
 	link TEXT NOT NULL, 
-	guid TEXT NOT NULL, 
+	guid INTEGER NOT NULL, 
 	pubDate TEXT NOT NULL, 
 	category TEXT NOT NULL, 
 	enclosure TEXT NOT NULL,

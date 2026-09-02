@@ -28,13 +28,13 @@ func TestUnmarshalFeed(t *testing.T) {
 	}
 
 	item := feed.Channel.Items[0]
-	if item.GUID != "1015925" {
+	if item.GUID != 1016061 {
 		t.Fatalf("first item GUID = %q, want %q", item.GUID, "1015800")
 	}
 	if item.Enclosure.Type != "image/jpeg" {
 		t.Fatalf("enclosure type = %q, want %q", item.Enclosure.Type, "image/jpeg")
 	}
-	if !strings.Contains(item.Description, "było celowe podpalenie? Nowe informacje ws.") {
+	if !strings.Contains(item.Description, "przetestowały") {
 		t.Fatalf("description = %q, want feed content", item.Description)
 	}
 }

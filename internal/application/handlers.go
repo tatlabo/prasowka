@@ -63,6 +63,15 @@ func (app *Application) ReadInt(c *gin.Context, key string, constructive int, ma
 	return i, nil
 }
 
+func (app *Application) ReadString(c *gin.Context, key string) (s string) {
+	s, ok := c.GetQuery(key)
+	if !ok {
+		return ""
+	}
+
+	return strings.TrimSpace(s)
+}
+
 func (app *Application) HandleAllDaily(c *gin.Context) {
 	ValidationErrors := make(map[string]error)
 
@@ -80,6 +89,8 @@ func (app *Application) HandleAllDaily(c *gin.Context) {
 	}
 
 	f := filters.Article{}
+	f.Title = app.ReadString(c, "title")
+
 	f.Page = page
 	f.PageSize = pageSize
 
